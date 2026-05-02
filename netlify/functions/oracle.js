@@ -25,6 +25,8 @@ exports.handler = async function(event) {
     });
 
     const text = await response.text();
+    console.log("STATUS:", response.status);
+    console.log("RESPONSE:", text);
     return {
       statusCode: 200,
       headers: {
@@ -34,6 +36,7 @@ exports.handler = async function(event) {
       body: text
     };
   } catch (err) {
+    console.log("ERROR:", err.message);
     return {
       statusCode: 500,
       headers: { "Access-Control-Allow-Origin": "*" },
