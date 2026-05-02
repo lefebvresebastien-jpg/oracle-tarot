@@ -687,6 +687,67 @@ footer {
 .mt-2 { margin-top: 2rem; }
 .hidden { display: none; }
 
+
+.prix-section {
+  background: linear-gradient(to bottom, var(--nuit2), var(--nuit));
+  padding: 6rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+.prix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+.prix-card {
+  background: linear-gradient(135deg, rgba(26,22,48,0.9), rgba(10,8,18,0.95));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s;
+}
+.prix-card:hover {
+  border-color: var(--or);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.15);
+}
+.prix-icon { font-size: 32px; margin-bottom: 1rem; }
+.prix-nom {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--or);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.prix-montant {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 28px;
+  color: var(--texte);
+  margin-bottom: 1.5rem;
+}
+.btn-payer {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--nuit);
+  background: linear-gradient(135deg, var(--or), var(--or-pale));
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  width: 100%;
+}
+.btn-payer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+}
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--nuit2); }
@@ -712,6 +773,7 @@ footer {
   <a href="#accueil" class="nav-logo">✦ L'ORACLE</a>
   <ul class="nav-links">
     <li><a href="#services">Services</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
     <li><a href="#consultation">Consultation</a></li>
     <li><a href="#apropos">À propos</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -774,6 +836,55 @@ footer {
     <div class="text-center mt-2">
       <a href="#consultation" class="btn-primaire">Commencer ma consultation</a>
     </div>
+  </div>
+</section>
+
+
+<!-- Tarifs & Paiement -->
+<section class="prix-section" id="tarifs">
+  <div class="container">
+    <h2 class="section-titre">Tarifs</h2>
+    <p class="section-sous">Choisissez votre consultation et réglez en toute sécurité</p>
+    <div class="ligne-or"></div>
+    <div class="prix-grid">
+      <div class="prix-card">
+        <div class="prix-icon">🌅</div>
+        <div class="prix-nom">Carte du Jour</div>
+        <div class="prix-montant">5€</div>
+        <a href="https://buy.stripe.com/test_14AeVe7E0ePzfvgd9Y8ww05" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+      <div class="prix-card">
+        <div class="prix-icon">⏳</div>
+        <div class="prix-nom">Passé · Présent · Futur</div>
+        <div class="prix-montant">15€</div>
+        <a href="https://buy.stripe.com/test_5kQ6oI4rO6j3cj4c5U8ww04" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+      <div class="prix-card">
+        <div class="prix-icon">💛</div>
+        <div class="prix-nom">Tirage Amour</div>
+        <div class="prix-montant">25€</div>
+        <a href="https://buy.stripe.com/test_bJedRabUg5eZaaW4Ds8ww03" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+      <div class="prix-card">
+        <div class="prix-icon">🌟</div>
+        <div class="prix-nom">Tirage Carrière</div>
+        <div class="prix-montant">20€</div>
+        <a href="https://buy.stripe.com/test_28E8wQ5vSePz2Iu4Ds8ww02" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+      <div class="prix-card">
+        <div class="prix-icon">☯️</div>
+        <div class="prix-nom">Croix Celtique</div>
+        <div class="prix-montant">35€</div>
+        <a href="https://buy.stripe.com/test_3cI9AU4rOePz6YKgma8ww01" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+      <div class="prix-card">
+        <div class="prix-icon">🕯️</div>
+        <div class="prix-nom">Chemin de l'Âme</div>
+        <div class="prix-montant">25€</div>
+        <a href="https://buy.stripe.com/test_28E00kcYk36R5UGfi68ww00" target="_blank" class="btn-payer">✦ Consulter</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:2rem;font-style:italic;color:var(--texte-muted);font-size:15px;">Paiement sécurisé par Stripe · CB, Apple Pay, Google Pay acceptés</p>
   </div>
 </section>
 
@@ -1103,13 +1214,22 @@ const DENIERS = [
 const JEU_COMPLET = [...ARCANES_MAJEURS,...BAGUETTES,...COUPES,...EPEES,...DENIERS];
 
 // ===== CONFIGURATIONS DES TIRAGES =====
+const STRIPE_LINKS = {
+  jour: 'https://buy.stripe.com/test_14AeVe7E0ePzfvgd9Y8ww05',
+  '3cartes': 'https://buy.stripe.com/test_5kQ6oI4rO6j3cj4c5U8ww04',
+  amour: 'https://buy.stripe.com/test_bJedRabUg5eZaaW4Ds8ww03',
+  carriere: 'https://buy.stripe.com/test_28E8wQ5vSePz2Iu4Ds8ww02',
+  celtique: 'https://buy.stripe.com/test_3cI9AU4rOePz6YKgma8ww01',
+  spirituel: 'https://buy.stripe.com/test_28E00kcYk36R5UGfi68ww00',
+};
+
 const CONFIGS = {
-  jour: { nb:1, positions:["Message du jour"] },
-  "3cartes": { nb:3, positions:["Passé","Présent","Futur"] },
-  amour: { nb:5, positions:["Vous","L'autre","Le lien","L'obstacle","Le futur"] },
-  carriere: { nb:4, positions:["Situation","Atout","Défi","Conseil"] },
-  celtique: { nb:10, positions:["Situation","Obstacle","Fondation","Passé récent","Couronné","Futur proche","Votre attitude","Environnement","Espoirs/Craintes","Résultat final"] },
-  spirituel: { nb:6, positions:["Âme présente","Leçon karmique","Don caché","Épreuve","Guide intérieur","Évolution"] },
+  jour: { nb:1, positions:["Message du jour"], prix:'5€', label:'Carte du jour' },
+  "3cartes": { nb:3, positions:["Passé","Présent","Futur"], prix:"15€", label:"Passé·Présent·Futur" },
+  amour: { nb:5, positions:["Vous","L'autre","Le lien","L'obstacle","Le futur"], prix:"25€", label:"Tirage Amour" },
+  carriere: { nb:4, positions:["Situation","Atout","Défi","Conseil"], prix:"20€", label:"Tirage Carrière" },
+  celtique: { nb:10, positions:["Situation","Obstacle","Fondation","Passé récent","Couronné","Futur proche","Votre attitude","Environnement","Espoirs/Craintes","Résultat final"], prix:"35€", label:"Croix Celtique" },
+  spirituel: { nb:6, positions:["Âme présente","Leçon karmique","Don caché","Épreuve","Guide intérieur","Évolution"], prix:"25€", label:"Chemin de l'Âme" },
 };
 
 let tirageActuel = 'jour';
