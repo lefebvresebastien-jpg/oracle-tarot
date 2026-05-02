@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'Oracle du Tarot — Consultation Guidée</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --or: #c9a84c;
+  --or-pale: #e8d5a3;
+  --or-fonce: #8a6820;
+  --nuit: #0a0812;
+  --nuit2: #110f1e;
+  --nuit3: #1a1630;
+  --violet: #2d1b69;
+  --violet2: #4a2f9a;
+  --violet-clair: #7b5fc4;
+  --rose: #c4628a;
+  --texte: #f0e8d8;
+  --texte-muted: #a89880;
+  --texte-dim: #6b5f52;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--nuit);
+  color: var(--texte);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  line-height: 1.7;
+  cursor: default;
+  overflow-x: hidden;
+}
+
+/* ===== ÉTOILES FOND ===== */
+.starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--d) infinite var(--delay);
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.4); }
+}
+
+/* ===== NAVIGATION ===== */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(10,8,18,0.95), transparent);
+  padding: 1.2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-logo {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  letter-spacing: 4px;
+  color: var(--or);
+  text-decoration: none;
+}
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+.nav-links a {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--texte-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+  text-transform: uppercase;
+}
+.nav-links a:hover { color: var(--or); }
+
+/* ===== HERO ===== */
+#accueil {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  z-index: 1;
+}
+
+.hero-ornement {
+  font-size: 48px;
+  margin-bottom: 1.5rem;
+  animation: flottement 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(201,168,76,0.4));
+}
+@keyframes flottement {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.hero-titre {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 700;
+  color: var(--or);
+  letter-spacing: 6px;
+  line-height: 1.2;
+  text-shadow: 0 0 40px rgba(201,168,76,0.3);
+  margin-bottom: 0.5rem;
+}
+.hero-sous-titre {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(12px, 2vw, 16px);
+  letter-spacing: 8px;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.hero-desc {
+  max-width: 560px;
+  font-size: 20px;
+  font-style: italic;
+  color: var(--texte-muted);
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+.hero-separateur {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  color: var(--or);
+  font-size: 20px;
+}
+.hero-separateur::before,
+.hero-separateur::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or), transparent);
+  max-width: 120px;
+}
+
+.btn-primaire {
+  font-family: 'Cinzel', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--nuit);
+  background: linear-gradient(135deg, var(--or), var(--or-pale), var(--or));
+  background-size: 200% 200%;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  animation: shimmer 3s ease infinite;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-primaire:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(201,168,76,0.4);
+}
+@keyframes shimmer {
+  0%,100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.btn-secondaire {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--or);
+  background: transparent;
+  border: 1px solid var(--or-fonce);
+  padding: 0.8rem 2rem;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s;
+}
+.btn-secondaire:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--or);
+}
+
+/* ===== SECTIONS ===== */
+section {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 2rem;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.section-titre {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(20px, 3vw, 28px);
+  letter-spacing: 5px;
+  color: var(--or);
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+.section-sous {
+  text-align: center;
+  font-style: italic;
+  color: var(--texte-muted);
+  font-size: 17px;
+  margin-bottom: 3.5rem;
+}
+.ligne-or {
+  width: 80px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--or), transparent);
+  margin: 1rem auto 3rem;
+}
+
+/* ===== SERVICES ===== */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.service-card {
+  background: linear-gradient(135deg, rgba(45,27,105,0.3), rgba(17,15,30,0.8));
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.service-card:hover {
+  border-color: var(--or);
+  background: linear-gradient(135deg, rgba(45,27,105,0.5), rgba(17,15,30,0.9));
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(201,168,76,0.15);
+}
+.service-icon { font-size: 36px; margin-bottom: 1rem; }
+.service-nom {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: var(--or);
+  margin-bottom: 0.5rem;
+}
+.service-desc { font-size: 15px; color: var(--texte-muted); font-style: italic; }
+
+/* ===== CONSULTATION ===== */
+#consultation {
+  background: linear-gradient(to bottom, var(--nuit), var(--nuit2), var(--nuit));
+}
+
+.form-consultation {
+  background: linear-gradient(135deg, rgba(26,22,48,0.9), rgba(10,8,18,0.95));
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 4px;
+  padding: 3rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+
+.form-groupe {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.form-groupe label {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+}
+.form-groupe input,
+.form-groupe textarea,
+.form-groupe select {
+  background: rgba(10,8,18,0.8);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 2px;
+  padding: 0.9rem 1.2rem;
+  color: var(--texte);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.3s;
+  width: 100%;
+}
+.form-groupe input:focus,
+.form-groupe textarea:focus,
+.form-groupe select:focus {
+  border-color: var(--or);
+}
+.form-groupe select option {
+  background: var(--nuit2);
+  color: var(--texte);
+}
+.form-groupe textarea { min-height: 100px; resize: vertical; }
+
+.tirage-choix {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.tirage-option {
+  background: rgba(10,8,18,0.6);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 4px;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.tirage-option:hover,
+.tirage-option.actif {
+  border-color: var(--or);
+  background: rgba(45,27,105,0.4);
+}
+.tirage-option.actif .to-icon { filter: drop-shadow(0 0 8px var(--or)); }
+.to-icon { font-size: 24px; margin-bottom: 6px; }
+.to-nom {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--or);
+  display: block;
+  margin-bottom: 3px;
+}
+.to-nb { font-size: 13px; color: var(--texte-muted); font-style: italic; }
+
+/* ===== CARTES VISUELLES ===== */
+.cartes-zone {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+  min-height: 200px;
+}
+.carte-container {
+  text-align: center;
+  animation: apparitionCarte 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+}
+@keyframes apparitionCarte {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.carte-pos-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--texte-muted);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.carte-visuelle {
+  width: 100px;
+  height: 165px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.carte-endroit {
+  background: linear-gradient(160deg, #1a1040, #0d0824);
+  border: 1px solid rgba(201,168,76,0.5);
+  box-shadow: 0 0 20px rgba(201,168,76,0.1), inset 0 0 30px rgba(45,27,105,0.3);
+}
+.carte-renversee {
+  background: linear-gradient(160deg, #1a0a0a, #0d0808);
+  border: 1px solid rgba(196,98,138,0.5);
+  box-shadow: 0 0 20px rgba(196,98,138,0.1);
+  transform: rotate(180deg);
+}
+.carte-symbole { font-size: 30px; margin-bottom: 4px; }
+.carte-num {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  color: rgba(201,168,76,0.7);
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+.carte-nom-visuel {
+  font-family: 'Cinzel', serif;
+  font-size: 8px;
+  color: var(--or-pale);
+  text-align: center;
+  line-height: 1.3;
+}
+.carte-renversee-tag {
+  font-size: 9px;
+  color: var(--rose);
+  margin-top: 3px;
+}
+.carte-suit {
+  font-size: 9px;
+  color: var(--texte-dim);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* ===== ANALYSE ===== */
+.analyse-box {
+  background: linear-gradient(135deg, rgba(26,22,48,0.95), rgba(10,8,18,0.98));
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  padding: 2.5rem;
+  margin-top: 1.5rem;
+}
+.analyse-entete {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--or);
+  text-align: center;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+}
+.analyse-texte {
+  font-size: 18px;
+  line-height: 1.9;
+  color: var(--texte);
+  white-space: pre-wrap;
+}
+.loading-oracle {
+  text-align: center;
+  padding: 2rem;
+}
+.loading-symboles {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 1rem;
+  animation: rotation-lente 6s linear infinite;
+}
+@keyframes rotation-lente {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.loading-texte {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--texte-muted);
+  animation: pulsation 2s ease infinite;
+}
+@keyframes pulsation {
+  0%,100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.erreur-msg {
+  color: var(--rose);
+  font-style: italic;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* ===== À PROPOS ===== */
+#apropos {
+  background: linear-gradient(to bottom, var(--nuit), rgba(26,22,48,0.5), var(--nuit));
+}
+.apropos-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 700px) { .apropos-content { grid-template-columns: 1fr; } }
+.apropos-portrait {
+  text-align: center;
+}
+.portrait-cercle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--nuit2));
+  border: 2px solid rgba(201,168,76,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 80px;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 0 60px rgba(201,168,76,0.1);
+}
+.portrait-nom {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 20px;
+  color: var(--or);
+  margin-bottom: 0.3rem;
+}
+.portrait-titre-p {
+  font-style: italic;
+  color: var(--texte-muted);
+  font-size: 16px;
+}
+.apropos-texte {
+  font-size: 18px;
+  line-height: 1.9;
+  color: var(--texte-muted);
+}
+.apropos-texte p { margin-bottom: 1.5rem; }
+.apropos-texte strong {
+  color: var(--texte);
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ===== TÉMOIGNAGES ===== */
+.temoignages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+.temoignage {
+  background: rgba(26,22,48,0.5);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 4px;
+  padding: 2rem;
+  position: relative;
+}
+.temoignage::before {
+  content: '❝';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  font-size: 40px;
+  color: var(--or-fonce);
+  line-height: 1;
+}
+.temo-texte {
+  font-style: italic;
+  font-size: 17px;
+  color: var(--texte-muted);
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+.temo-auteur {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--or);
+}
+.etoiles { color: var(--or); font-size: 14px; margin-bottom: 0.5rem; }
+
+/* ===== CONTACT ===== */
+#contact {
+  background: linear-gradient(to bottom, var(--nuit), var(--nuit2));
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-infos { }
+.contact-infos h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--or);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.contact-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+.contact-ico { font-size: 20px; flex-shrink: 0; }
+.contact-label {
+  font-family: 'Cinzel', serif;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--texte-dim);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 3px;
+}
+.contact-val {
+  font-size: 17px;
+  color: var(--texte-muted);
+}
+.contact-reseaux {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+.reseau-btn {
+  width: 42px; height: 42px;
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+.reseau-btn:hover {
+  border-color: var(--or);
+  background: rgba(201,168,76,0.1);
+}
+
+.form-contact { }
+.form-contact .form-groupe { margin-bottom: 1.2rem; }
+.message-succes {
+  background: rgba(45,27,105,0.4);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  font-style: italic;
+  color: var(--or-pale);
+  display: none;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--nuit);
+}
+.footer-logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 18px;
+  color: var(--or);
+  margin-bottom: 1rem;
+}
+.footer-texte {
+  font-size: 15px;
+  color: var(--texte-dim);
+  font-style: italic;
+}
+.footer-mentions {
+  font-size: 13px;
+  color: var(--texte-dim);
+  margin-top: 1.5rem;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
+}
+
+/* ===== UTILITAIRES ===== */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 2rem; }
+.hidden { display: none; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--nuit2); }
+::-webkit-scrollbar-thumb { background: var(--or-fonce); border-radius: 3px; }
+
+/* ===== RESPONSIVE MOBILE ===== */
+@media (max-width: 600px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { gap: 1.2rem; }
+  .nav-links a { font-size: 10px; letter-spacing: 1px; }
+  .form-consultation { padding: 1.5rem; }
+  .analyse-box { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Fond étoilé -->
+<div class="starfield" id="starfield"></div>
+
+<!-- Navigation -->
+<nav>
+  <a href="#accueil" class="nav-logo">✦ L'ORACLE</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#consultation">Consultation</a></li>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="accueil">
+  <div class="hero-ornement">🔮</div>
+  <h1 class="hero-titre">L'Oracle du Tarot</h1>
+  <p class="hero-sous-titre">Guidance · Révélation · Lumière</p>
+  <div class="hero-separateur">✦</div>
+  <p class="hero-desc">
+    Laissez les arcanes vous guider. Chaque tirage est une porte vers votre vérité intérieure, une conversation avec le destin.
+  </p>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;">
+    <a href="#consultation" class="btn-primaire">Consulter l'Oracle</a>
+    <a href="#services" class="btn-secondaire">Découvrir les tirages</a>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="container">
+    <h2 class="section-titre">Les Tirages</h2>
+    <p class="section-sous">Chaque méthode révèle une facette différente de votre chemin</p>
+    <div class="ligne-or"></div>
+    <div class="services-grid">
+      <div class="service-card" onclick="choisirTirage('jour')">
+        <div class="service-icon">🌅</div>
+        <div class="service-nom">Carte du Jour</div>
+        <div class="service-desc">Un message essentiel pour guider votre journée</div>
+      </div>
+      <div class="service-card" onclick="choisirTirage('3cartes')">
+        <div class="service-icon">⏳</div>
+        <div class="service-nom">Passé · Présent · Futur</div>
+        <div class="service-desc">Le fil du temps dévoilé en trois arcanes</div>
+      </div>
+      <div class="service-card" onclick="choisirTirage('amour')">
+        <div class="service-icon">💛</div>
+        <div class="service-nom">Tirage Amour</div>
+        <div class="service-desc">Les secrets de votre cœur et de vos relations</div>
+      </div>
+      <div class="service-card" onclick="choisirTirage('carriere')">
+        <div class="service-icon">🌟</div>
+        <div class="service-nom">Tirage Carrière</div>
+        <div class="service-desc">Vocation, obstacles et opportunités professionnelles</div>
+      </div>
+      <div class="service-card" onclick="choisirTirage('celtique')">
+        <div class="service-icon">☯️</div>
+        <div class="service-nom">Croix Celtique</div>
+        <div class="service-desc">Lecture approfondie en 10 cartes de toute situation</div>
+      </div>
+      <div class="service-card" onclick="choisirTirage('spirituel')">
+        <div class="service-icon">🕯️</div>
+        <div class="service-nom">Chemin de l'Âme</div>
+        <div class="service-desc">Éveil, karma et mission de vie</div>
+      </div>
+    </div>
+    <div class="text-center mt-2">
+      <a href="#consultation" class="btn-primaire">Commencer ma consultation</a>
+    </div>
+  </div>
+</section>
+
+<!-- Consultation principale -->
+<section id="consultation">
+  <div class="container">
+    <h2 class="section-titre">Consultation</h2>
+    <p class="section-sous">Posez votre question, les arcanes vous répondront</p>
+    <div class="ligne-or"></div>
+
+    <div id="formulaireZone" class="form-consultation">
+      <div class="form-row">
+        <div class="form-groupe">
+          <label>Votre prénom</label>
+          <input type="text" id="inp-prenom" placeholder="Marie…" />
+        </div>
+        <div class="form-groupe">
+          <label>Votre date de naissance</label>
+          <input type="date" id="inp-naissance" />
+        </div>
+      </div>
+      <div class="form-groupe">
+        <label>Votre question ou thème</label>
+        <textarea id="inp-question" placeholder="Ex : Comment évolue ma situation amoureuse ? Dois-je accepter ce nouveau poste ? Quel chemin suivre pour trouver ma paix intérieure ?"></textarea>
+      </div>
+      <div class="form-groupe">
+        <label>Thème de la consultation</label>
+        <select id="inp-theme">
+          <option value="general">Général — toutes les sphères de vie</option>
+          <option value="amour">Amour & Relations</option>
+          <option value="travail">Travail & Carrière</option>
+          <option value="spirituel">Spiritualité & Éveil</option>
+          <option value="famille">Famille & Foyer</option>
+          <option value="finance">Finances & Abondance</option>
+          <option value="sante">Santé & Bien-être</option>
+        </select>
+      </div>
+      <div class="form-groupe">
+        <label>Type de tirage</label>
+        <div class="tirage-choix">
+          <div class="tirage-option actif" data-tirage="jour" onclick="selTirage(this)">
+            <div class="to-icon">🌅</div>
+            <span class="to-nom">Carte du Jour</span>
+            <span class="to-nb">1 carte</span>
+          </div>
+          <div class="tirage-option" data-tirage="3cartes" onclick="selTirage(this)">
+            <div class="to-icon">⏳</div>
+            <span class="to-nom">Passé·Présent·Futur</span>
+            <span class="to-nb">3 cartes</span>
+          </div>
+          <div class="tirage-option" data-tirage="amour" onclick="selTirage(this)">
+            <div class="to-icon">💛</div>
+            <span class="to-nom">Amour</span>
+            <span class="to-nb">5 cartes</span>
+          </div>
+          <div class="tirage-option" data-tirage="carriere" onclick="selTirage(this)">
+            <div class="to-icon">🌟</div>
+            <span class="to-nom">Carrière</span>
+            <span class="to-nb">4 cartes</span>
+          </div>
+          <div class="tirage-option" data-tirage="celtique" onclick="selTirage(this)">
+            <div class="to-icon">☯️</div>
+            <span class="to-nom">Croix Celtique</span>
+            <span class="to-nb">10 cartes</span>
+          </div>
+          <div class="tirage-option" data-tirage="spirituel" onclick="selTirage(this)">
+            <div class="to-icon">🕯️</div>
+            <span class="to-nom">Chemin de l'Âme</span>
+            <span class="to-nb">6 cartes</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button class="btn-primaire" onclick="lancerConsultation()" id="btnLancer">✦ Révéler les Arcanes ✦</button>
+      </div>
+    </div>
+
+    <!-- Zone résultats -->
+    <div id="resultatsZone" class="hidden">
+      <div class="cartes-zone" id="cartesZone"></div>
+      <div id="analyseZone"></div>
+      <div class="text-center mt-2">
+        <button class="btn-secondaire" onclick="nouvelleConsultation()">↺ Nouvelle consultation</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- À propos -->
+<section id="apropos">
+  <div class="container">
+    <h2 class="section-titre">L'Oracle</h2>
+    <p class="section-sous">Une voyante à votre service depuis plus de 15 ans</p>
+    <div class="ligne-or"></div>
+    <div class="apropos-content">
+      <div class="apropos-portrait">
+        <div class="portrait-cercle">🌙</div>
+        <div class="portrait-nom">Séraphine</div>
+        <div class="portrait-titre-p">Cartomancienne & Voyante</div>
+      </div>
+      <div class="apropos-texte">
+        <p>Depuis mon plus jeune âge, j'ai toujours ressenti la présence invisible du destin dans chaque moment de vie. <strong>Le Tarot est venu à moi comme une évidence</strong>, un langage universel pour traduire ce que l'âme pressent mais ne sait pas encore nommer.</p>
+        <p>Formée auprès des plus grandes traditions de cartomancie européenne, j'ai développé une approche qui mêle <strong>lecture symbolique approfondie, intuition et bienveillance absolue</strong>. Chaque consultation est unique, chaque tirage est un dialogue sacré.</p>
+        <p>Mon objectif n'est pas de vous dire ce qui va se passer — mais de vous <strong>éclairer sur ce que vous portez en vous</strong>, sur vos forces cachées et les chemins qui s'offrent à votre liberté.</p>
+        <div style="margin-top:1.5rem;">
+          <a href="#consultation" class="btn-primaire">Consulter maintenant</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Témoignages -->
+<section id="temoignages" style="padding-top:0;">
+  <div class="container">
+    <h2 class="section-titre">Témoignages</h2>
+    <p class="section-sous">Ce que disent celles et ceux qui ont consulté l'Oracle</p>
+    <div class="ligne-or"></div>
+    <div class="temoignages-grid">
+      <div class="temoignage">
+        <div class="etoiles">★★★★★</div>
+        <p class="temo-texte">Un tirage d'une justesse troublante. Les cartes ont mis le doigt exactement sur ce que je n'osais pas m'avouer. Je recommande sans hésiter.</p>
+        <div class="temo-auteur">— CLAIRE M., LYON</div>
+      </div>
+      <div class="temoignage">
+        <div class="etoiles">★★★★★</div>
+        <p class="temo-texte">J'étais sceptique au départ. Mais l'analyse reçue était si précise et nuancée que j'en suis ressortie profondément touchée et guidée.</p>
+        <div class="temo-auteur">— ISABELLE R., PARIS</div>
+      </div>
+      <div class="temoignage">
+        <div class="etoiles">★★★★★</div>
+        <p class="temo-texte">La croix celtique m'a révélé des aspects de ma situation professionnelle que je n'aurais jamais imaginés. Six mois plus tard, tout s'est réalisé.</p>
+        <div class="temo-auteur">— THOMAS B., BORDEAUX</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <h2 class="section-titre">Contact</h2>
+    <p class="section-sous">Pour toute question ou consultation personnalisée approfondie</p>
+    <div class="ligne-or"></div>
+    <div class="contact-grid">
+      <div class="contact-infos">
+        <h3>Me contacter</h3>
+        <div class="contact-item">
+          <span class="contact-ico">📧</span>
+          <div>
+            <span class="contact-label">Email</span>
+            <span class="contact-val">oracle@votre-domaine.fr</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-ico">📞</span>
+          <div>
+            <span class="contact-label">Téléphone</span>
+            <span class="contact-val">+33 (0)6 XX XX XX XX</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-ico">🕐</span>
+          <div>
+            <span class="contact-label">Disponibilités</span>
+            <span class="contact-val">Lundi–Samedi, 9h–20h</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <span class="contact-ico">🌐</span>
+          <div>
+            <span class="contact-label">Consultations</span>
+            <span class="contact-val">En ligne · Partout en France</span>
+          </div>
+        </div>
+        <div class="contact-reseaux">
+          <a href="#" class="reseau-btn" title="Instagram">📸</a>
+          <a href="#" class="reseau-btn" title="Facebook">📘</a>
+          <a href="#" class="reseau-btn" title="TikTok">🎵</a>
+        </div>
+      </div>
+      <div class="form-contact">
+        <div id="formContactZone">
+          <div class="form-groupe">
+            <label>Votre nom</label>
+            <input type="text" id="c-nom" placeholder="Prénom Nom" />
+          </div>
+          <div class="form-groupe">
+            <label>Votre email</label>
+            <input type="email" id="c-email" placeholder="vous@exemple.fr" />
+          </div>
+          <div class="form-groupe">
+            <label>Votre message</label>
+            <textarea id="c-message" style="min-height:130px;" placeholder="Décrivez votre demande ou posez votre question…"></textarea>
+          </div>
+          <button class="btn-primaire" onclick="envoyerContact()">Envoyer le message</button>
+        </div>
+        <div class="message-succes" id="msgSucces">
+          ✦ Merci pour votre message. <br>Je vous répondrai dans les 24 heures. <br>Que la lumière guide votre chemin. ✦
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">✦ L'Oracle du Tarot ✦</div>
+  <p class="footer-texte">« Les étoiles n'imposent pas, elles éclairent. »</p>
+  <p class="footer-mentions">© 2025 · L'Oracle du Tarot · Tous droits réservés · Divertissement &amp; développement personnel</p>
+</footer>
+
+<script>
+// ===== FOND ÉTOILÉ =====
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--delay:${Math.random()*4}s;width:${Math.random()<0.2?3:2}px;height:${Math.random()<0.2?3:2}px;opacity:${0.2+Math.random()*0.6}`;
+    sf.appendChild(s);
+  }
+})();
+
+// ===== JEUX DE CARTES COMPLET 78 CARTES =====
+const ARCANES_MAJEURS = [
+  {nom:"Le Mat",sym:"🃏",num:"0",suit:"majeur"},
+  {nom:"Le Bateleur",sym:"⚗️",num:"I",suit:"majeur"},
+  {nom:"La Papesse",sym:"📜",num:"II",suit:"majeur"},
+  {nom:"L'Impératrice",sym:"🌸",num:"III",suit:"majeur"},
+  {nom:"L'Empereur",sym:"🏛️",num:"IV",suit:"majeur"},
+  {nom:"Le Pape",sym:"🔑",num:"V",suit:"majeur"},
+  {nom:"L'Amoureux",sym:"💛",num:"VI",suit:"majeur"},
+  {nom:"Le Chariot",sym:"⚡",num:"VII",suit:"majeur"},
+  {nom:"La Justice",sym:"⚖️",num:"VIII",suit:"majeur"},
+  {nom:"L'Hermite",sym:"🕯️",num:"IX",suit:"majeur"},
+  {nom:"La Roue de Fortune",sym:"☯️",num:"X",suit:"majeur"},
+  {nom:"La Force",sym:"🦁",num:"XI",suit:"majeur"},
+  {nom:"Le Pendu",sym:"🪢",num:"XII",suit:"majeur"},
+  {nom:"L'Arcane sans Nom",sym:"💀",num:"XIII",suit:"majeur"},
+  {nom:"Tempérance",sym:"🌊",num:"XIV",suit:"majeur"},
+  {nom:"Le Diable",sym:"🔥",num:"XV",suit:"majeur"},
+  {nom:"La Tour",sym:"🗼",num:"XVI",suit:"majeur"},
+  {nom:"L'Étoile",sym:"⭐",num:"XVII",suit:"majeur"},
+  {nom:"La Lune",sym:"🌙",num:"XVIII",suit:"majeur"},
+  {nom:"Le Soleil",sym:"☀️",num:"XIX",suit:"majeur"},
+  {nom:"Le Jugement",sym:"🎺",num:"XX",suit:"majeur"},
+  {nom:"Le Monde",sym:"🌍",num:"XXI",suit:"majeur"},
+];
+
+function genMineurs(couleur, sym, as, roi, reine, valet) {
+  const cartes = [];
+  for(let i=1;i<=14;i++){
+    let nom, s;
+    if(i===1) { nom=as; s="A"; }
+    else if(i===11) { nom=valet; s="V"; }
+    else if(i===12) { nom=reine; s="R"; }
+    else if(i===13) { nom=roi; s="K"; }
+    else if(i===14) { nom="As de "+couleur; s="A2"; } // sécurité
+    else { nom=["","","2","3","4","5","6","7","8","9","10"][i]+" de "+couleur; s=i+""; }
+    cartes.push({nom,sym,num:s,suit:couleur});
+  }
+  return cartes.slice(0,14);
+}
+
+const BAGUETTES = [
+  {nom:"As de Baguettes",sym:"🪄",num:"As",suit:"Baguettes"},
+  {nom:"2 de Baguettes",sym:"🪄",num:"2",suit:"Baguettes"},
+  {nom:"3 de Baguettes",sym:"🪄",num:"3",suit:"Baguettes"},
+  {nom:"4 de Baguettes",sym:"🪄",num:"4",suit:"Baguettes"},
+  {nom:"5 de Baguettes",sym:"🪄",num:"5",suit:"Baguettes"},
+  {nom:"6 de Baguettes",sym:"🪄",num:"6",suit:"Baguettes"},
+  {nom:"7 de Baguettes",sym:"🪄",num:"7",suit:"Baguettes"},
+  {nom:"8 de Baguettes",sym:"🪄",num:"8",suit:"Baguettes"},
+  {nom:"9 de Baguettes",sym:"🪄",num:"9",suit:"Baguettes"},
+  {nom:"10 de Baguettes",sym:"🪄",num:"10",suit:"Baguettes"},
+  {nom:"Valet de Baguettes",sym:"🧙",num:"V",suit:"Baguettes"},
+  {nom:"Reine de Baguettes",sym:"👸",num:"R",suit:"Baguettes"},
+  {nom:"Roi de Baguettes",sym:"🤴",num:"K",suit:"Baguettes"},
+];
+const COUPES = [
+  {nom:"As de Coupes",sym:"🏆",num:"As",suit:"Coupes"},
+  {nom:"2 de Coupes",sym:"🏆",num:"2",suit:"Coupes"},
+  {nom:"3 de Coupes",sym:"🏆",num:"3",suit:"Coupes"},
+  {nom:"4 de Coupes",sym:"🏆",num:"4",suit:"Coupes"},
+  {nom:"5 de Coupes",sym:"🏆",num:"5",suit:"Coupes"},
+  {nom:"6 de Coupes",sym:"🏆",num:"6",suit:"Coupes"},
+  {nom:"7 de Coupes",sym:"🏆",num:"7",suit:"Coupes"},
+  {nom:"8 de Coupes",sym:"🏆",num:"8",suit:"Coupes"},
+  {nom:"9 de Coupes",sym:"🏆",num:"9",suit:"Coupes"},
+  {nom:"10 de Coupes",sym:"🏆",num:"10",suit:"Coupes"},
+  {nom:"Valet de Coupes",sym:"🧝",num:"V",suit:"Coupes"},
+  {nom:"Reine de Coupes",sym:"🧜",num:"R",suit:"Coupes"},
+  {nom:"Roi de Coupes",sym:"🧙‍♂️",num:"K",suit:"Coupes"},
+];
+const EPEES = [
+  {nom:"As d'Épées",sym:"⚔️",num:"As",suit:"Épées"},
+  {nom:"2 d'Épées",sym:"⚔️",num:"2",suit:"Épées"},
+  {nom:"3 d'Épées",sym:"⚔️",num:"3",suit:"Épées"},
+  {nom:"4 d'Épées",sym:"⚔️",num:"4",suit:"Épées"},
+  {nom:"5 d'Épées",sym:"⚔️",num:"5",suit:"Épées"},
+  {nom:"6 d'Épées",sym:"⚔️",num:"6",suit:"Épées"},
+  {nom:"7 d'Épées",sym:"⚔️",num:"7",suit:"Épées"},
+  {nom:"8 d'Épées",sym:"⚔️",num:"8",suit:"Épées"},
+  {nom:"9 d'Épées",sym:"⚔️",num:"9",suit:"Épées"},
+  {nom:"10 d'Épées",sym:"⚔️",num:"10",suit:"Épées"},
+  {nom:"Valet d'Épées",sym:"🗡️",num:"V",suit:"Épées"},
+  {nom:"Reine d'Épées",sym:"👑",num:"R",suit:"Épées"},
+  {nom:"Roi d'Épées",sym:"🛡️",num:"K",suit:"Épées"},
+];
+const DENIERS = [
+  {nom:"As de Deniers",sym:"🪙",num:"As",suit:"Deniers"},
+  {nom:"2 de Deniers",sym:"🪙",num:"2",suit:"Deniers"},
+  {nom:"3 de Deniers",sym:"🪙",num:"3",suit:"Deniers"},
+  {nom:"4 de Deniers",sym:"🪙",num:"4",suit:"Deniers"},
+  {nom:"5 de Deniers",sym:"🪙",num:"5",suit:"Deniers"},
+  {nom:"6 de Deniers",sym:"🪙",num:"6",suit:"Deniers"},
+  {nom:"7 de Deniers",sym:"🪙",num:"7",suit:"Deniers"},
+  {nom:"8 de Deniers",sym:"🪙",num:"8",suit:"Deniers"},
+  {nom:"9 de Deniers",sym:"🪙",num:"9",suit:"Deniers"},
+  {nom:"10 de Deniers",sym:"🪙",num:"10",suit:"Deniers"},
+  {nom:"Valet de Deniers",sym:"💼",num:"V",suit:"Deniers"},
+  {nom:"Reine de Deniers",sym:"🌺",num:"R",suit:"Deniers"},
+  {nom:"Roi de Deniers",sym:"💎",num:"K",suit:"Deniers"},
+];
+
+const JEU_COMPLET = [...ARCANES_MAJEURS,...BAGUETTES,...COUPES,...EPEES,...DENIERS];
+
+// ===== CONFIGURATIONS DES TIRAGES =====
+const CONFIGS = {
+  jour: { nb:1, positions:["Message du jour"] },
+  "3cartes": { nb:3, positions:["Passé","Présent","Futur"] },
+  amour: { nb:5, positions:["Vous","L'autre","Le lien","L'obstacle","Le futur"] },
+  carriere: { nb:4, positions:["Situation","Atout","Défi","Conseil"] },
+  celtique: { nb:10, positions:["Situation","Obstacle","Fondation","Passé récent","Couronné","Futur proche","Votre attitude","Environnement","Espoirs/Craintes","Résultat final"] },
+  spirituel: { nb:6, positions:["Âme présente","Leçon karmique","Don caché","Épreuve","Guide intérieur","Évolution"] },
+};
+
+let tirageActuel = 'jour';
+
+// ===== NAVIGATION DEPUIS SERVICES =====
+function choisirTirage(type) {
+  document.getElementById('consultation').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>{
+    document.querySelectorAll('.tirage-option').forEach(o=>{
+      o.classList.toggle('actif', o.dataset.tirage===type);
+    });
+    tirageActuel = type;
+  }, 400);
+}
+
+function selTirage(el) {
+  document.querySelectorAll('.tirage-option').forEach(o=>o.classList.remove('actif'));
+  el.classList.add('actif');
+  tirageActuel = el.dataset.tirage;
+}
+
+// ===== MÉLANGE =====
+function tirerCartes(n) {
+  const jeu = [...JEU_COMPLET].sort(()=>Math.random()-0.5);
+  return jeu.slice(0,n).map(c=>({...c, renversee: Math.random()<0.28}));
+}
+
+// ===== LANCER LA CONSULTATION =====
+function lancerConsultation() {
+  const prenom = document.getElementById('inp-prenom').value.trim();
+  const question = document.getElementById('inp-question').value.trim();
+  const theme = document.getElementById('inp-theme').value;
+  const naissance = document.getElementById('inp-naissance').value;
+
+  if(!prenom || !question) {
+    alert("Veuillez entrer votre prénom et votre question pour que l'Oracle puisse vous répondre.");
+    return;
+  }
+
+  const config = CONFIGS[tirageActuel];
+  const cartes = tirerCartes(config.nb);
+
+  document.getElementById('formulaireZone').classList.add('hidden');
+  document.getElementById('resultatsZone').classList.remove('hidden');
+
+  // Afficher cartes avec délai
+  const cz = document.getElementById('cartesZone');
+  cz.innerHTML = '';
+  cartes.forEach((carte, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'carte-container';
+    slot.style.animationDelay = (i * 0.15)+'s';
+    slot.innerHTML = `
+      <div class="carte-pos-label">${config.positions[i]}</div>
+      <div class="carte-visuelle ${carte.renversee?'carte-renversee':'carte-endroit'}">
+        <div class="carte-symbole">${carte.sym}</div>
+        <div class="carte-num">${carte.num}</div>
+        <div class="carte-nom-visuel">${carte.nom}</div>
+        ${carte.suit!=='majeur'?`<div class="carte-suit">${carte.suit}</div>`:''}
+        ${carte.renversee?'<div class="carte-renversee-tag">↕ renversée</div>':''}
+      </div>
+    `;
+    cz.appendChild(slot);
+  });
+
+  // Loading
+  document.getElementById('analyseZone').innerHTML = `
+    <div class="analyse-box">
+      <div class="loading-oracle">
+        <div class="loading-symboles">✦ ☽ ✦</div>
+        <div class="loading-texte">L'Oracle consulte les arcanes pour ${prenom}…</div>
+      </div>
+    </div>
+  `;
+
+  analyserIA(prenom, naissance, question, theme, cartes, config);
+}
+
+// ===== ANALYSE IA =====
+async function analyserIA(prenom, naissance, question, theme, cartes, config) {
+  const desc = cartes.map((c,i)=>
+    `Position "${config.positions[i]}" : ${c.nom}${c.suit!=='majeur'?' (arcane mineur — '+c.suit+')':' (arcane majeur)'}${c.renversee?' — carte RENVERSÉE':''}`
+  ).join('\n');
+
+  const naissanceInfo = naissance ? `Date de naissance : ${new Date(naissance).toLocaleDateString('fr-FR')}` : '';
+  const themesMap = {general:'général (toutes sphères)',amour:'amour et relations',travail:'travail et carrière',spirituel:'spiritualité et éveil',famille:'famille et foyer',finance:'finances et abondance',sante:'santé et bien-être'};
+
+  const prompt = `Tu es une cartomancienne experte, bienveillante et précise. Tu maîtrises parfaitement le Tarot de Marseille, les 22 arcanes majeurs ET les 56 arcanes mineurs (Baguettes, Coupes, Épées, Deniers) avec toute leur symbolique.
+
+Profil du consultant :
+- Prénom : ${prenom}
+${naissanceInfo}
+- Thème de consultation : ${themesMap[theme]||theme}
+- Question : "${question}"
+
+Type de tirage : ${config.positions.join(' · ')}
+
+Cartes tirées :
+${desc}
+
+Fais une analyse cartomancique complète, personnalisée et nuancée. Structure ta réponse ainsi :
+
+1. Commence par saluer ${prenom} chaleureusement et reconnais son intention
+2. Pour chaque carte dans sa position, donne une interprétation symbolique riche (2-3 phrases), en tenant compte : de la position, du fait qu'elle soit endroit ou renversée, du thème de la question, et de l'ensemble du tirage
+3. Dresse une synthèse globale qui tisse le sens de l'ensemble en réponse à la question posée
+4. Conclus par un message d'encouragement personnalisé et poétique pour ${prenom}
+
+Sois précis·e sur la symbolique des cartes (mineurs inclus), évocateur·trice dans le langage, et toujours ancré·e dans la question posée. Environ 500-600 mots. N'utilise pas de titres avec # ou ** — écris en prose fluide avec des sauts de ligne.`;
+
+  try {
+    const resp = await fetch("/.netlify/functions/oracle", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:1500,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+    const data = await resp.json();
+    const texte = data.content?.map(b=>b.text||'').join('') || "L'Oracle ne peut répondre en ce moment.";
+
+    document.getElementById('analyseZone').innerHTML = `
+      <div class="analyse-box">
+        <div class="analyse-entete">✦ Lecture des Arcanes pour ${prenom} ✦</div>
+        <div class="analyse-texte">${texte}</div>
+      </div>
+    `;
+  } catch(e) {
+    document.getElementById('analyseZone').innerHTML = `
+      <div class="analyse-box">
+        <p class="erreur-msg">L'Oracle rencontre une difficulté de connexion. Veuillez réessayer dans quelques instants.</p>
+      </div>
+    `;
+  }
+}
+
+// ===== NOUVELLE CONSULTATION =====
+function nouvelleConsultation() {
+  document.getElementById('resultatsZone').classList.add('hidden');
+  document.getElementById('formulaireZone').classList.remove('hidden');
+  document.getElementById('inp-prenom').value='';
+  document.getElementById('inp-question').value='';
+  document.getElementById('inp-naissance').value='';
+  document.getElementById('inp-theme').value='general';
+  document.querySelectorAll('.tirage-option').forEach(o=>o.classList.remove('actif'));
+  document.querySelector('[data-tirage="jour"]').classList.add('actif');
+  tirageActuel='jour';
+  document.getElementById('consultation').scrollIntoView({behavior:'smooth'});
+}
+
+// ===== CONTACT =====
+function envoyerContact() {
+  const nom=document.getElementById('c-nom').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const msg=document.getElementById('c-message').value.trim();
+  if(!nom||!email||!msg){alert("Merci de remplir tous les champs.");return;}
+  document.getElementById('formContactZone').style.display='none';
+  document.getElementById('msgSucces').style.display='block';
+}
+</script>
+</body>
+</html>
